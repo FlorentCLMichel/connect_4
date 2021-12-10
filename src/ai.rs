@@ -12,7 +12,7 @@ use rand::prelude::*;
 fn can_i_win_in(n_turns: usize, player: u8, the_board: &board::Board, last_col_played: usize) -> bool {
 
     if n_turns == 0 {
-        return board::just_won(&the_board, player, last_col_played);
+        return board::just_won(the_board, player, last_col_played);
     }
 
     let mut i_can_win;
@@ -39,7 +39,7 @@ fn can_i_win_in(n_turns: usize, player: u8, the_board: &board::Board, last_col_p
         }
     }
 
-    return true;
+    true
 }
 
 
@@ -73,7 +73,7 @@ fn can_opp_win_in(n_turns: usize, player: u8, the_board: &board::Board) -> bool 
         }
     }
 
-    return false;
+    false
 }
 
 
@@ -87,7 +87,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
     let const_two_adv: usize = 8;
 
     // if the move is not possible, return 0
-    if board::column_full(&the_board, col) {
+    if board::column_full(the_board, col) {
         return 0;
     } 
 
@@ -128,7 +128,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         n_good_tokens = 1;
         if (col > 3-i) && (col < 8-i) {
             for j in 0..4 {
-                current_token = board::read_value(&the_board, col+i-j, line);
+                current_token = board::read_value(the_board, col+i-j, line);
                 if current_token == player {
                     n_good_tokens += 1;
                 } else if current_token == 3-player {
@@ -151,7 +151,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         n_good_tokens = 1;
         if (col > 3-i) && (col < 8-i) {
             for j in 0..4 {
-                current_token = board::read_value(&the_board, col+i-j, line);
+                current_token = board::read_value(the_board, col+i-j, line);
                 if current_token == 3-player {
                     n_good_tokens += 1;
                 } else if current_token == player {
@@ -173,7 +173,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         n_good_tokens = 1;
         if (line > 3-i) && (line <= 7-i) {
             for j in 0..4 {
-                current_token = board::read_value(&the_board, col, line+i-j);
+                current_token = board::read_value(the_board, col, line+i-j);
                 if current_token == player {
                     n_good_tokens += 1;
                 } else if current_token == 3-player {
@@ -196,7 +196,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         n_good_tokens = 1;
         if (line > 3-i) && (line <= 7-i) {
             for j in 0..4 {
-                current_token = board::read_value(&the_board, col, line+i-j);
+                current_token = board::read_value(the_board, col, line+i-j);
                 if current_token == 3-player {
                     n_good_tokens += 1;
                 } else if current_token == player {
@@ -220,7 +220,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         if (line > 3-i_) && (line <= 7-i_) && (col > 3-i) && (col < 8-i) {
             for j in 0..4 {
                 j_ = u8::try_from(j).unwrap();
-                current_token = board::read_value(&the_board, col+i-j, line+i_-j_);
+                current_token = board::read_value(the_board, col+i-j, line+i_-j_);
                 if current_token == player {
                     n_good_tokens += 1;
                 } else if current_token == 3-player {
@@ -245,7 +245,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         if (line > 3-i_) && (line <= 7-i_) && (col > 3-i) && (col < 8-i) {
             for j in 0..4 {
                 j_ = u8::try_from(j).unwrap();
-                current_token = board::read_value(&the_board, col+i-j, line+i_-j_);
+                current_token = board::read_value(the_board, col+i-j, line+i_-j_);
                 if current_token == 3-player {
                     n_good_tokens += 1;
                 } else if current_token == player {
@@ -269,7 +269,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         if (line > i_) && (line < 5+i_) && (col > 3-i) && (col < 8-i) {
             for j in 0..4 {
                 j_ = u8::try_from(j).unwrap();
-                current_token = board::read_value(&the_board, col+i-j, line-i_+j_);
+                current_token = board::read_value(the_board, col+i-j, line-i_+j_);
                 if current_token == player {
                     n_good_tokens += 1;
                 } else if current_token == 3-player {
@@ -294,7 +294,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
         if (line > i_) && (line < 5+i_) && (col > 3-i) && (col < 8-i) {
             for j in 0..4 {
                 j_ = u8::try_from(j).unwrap();
-                current_token = board::read_value(&the_board, col+i-j, line-i_+j_);
+                current_token = board::read_value(the_board, col+i-j, line-i_+j_);
                 if current_token == 3-player {
                     n_good_tokens += 1;
                 } else if current_token == player {
@@ -313,7 +313,7 @@ fn estimate_score(col: usize, player: u8, the_board: &board::Board, strength: us
     if score < usize::MAX - strength {
         score
     } else {
-        return usize::MAX - strength - 1;
+        usize::MAX - strength - 1
     }
 }
 
@@ -324,14 +324,13 @@ pub fn play(board: &board::Board, player: u8, rng: &mut ThreadRng, strength: usi
 
     // look for the moves with a best score
     for col in 1..8 {
-        score = estimate_score(col, player, &board, strength);
+        score = estimate_score(col, player, board, strength);
         if score == best_score {
             best_cols.push(col);
         }
         if score > best_score {
             best_score = score;
-            best_cols = Vec::<usize>::new();
-            best_cols.push(col);
+            best_cols = vec![col];
         }
     }
     

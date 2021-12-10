@@ -54,7 +54,7 @@ fn main() {
                     match get_input().trim().parse::<usize>() {
                         Ok(c) => {
                                     col_played = c;
-                                    if (c < 1) || (c > 7) {
+                                    if !(1..=7).contains(&c) {
                                         println!("Not a valid column");
                                     } else if board::column_full(&the_board, c) {
                                         println!("Column full!");

@@ -29,10 +29,10 @@ impl Board
 }
 
 pub fn read_value(board: &Board, col: usize, line: u8) -> u8 {
-    if (col < 1) || (col > 7) {
+    if !(1..=7).contains(&col) {
         panic!();
     }
-    ((&board.columns[col-1] & (3 << 2*(line-1))) >> 2*(line-1)).try_into().unwrap()
+    ((board.columns[col-1] & (3 << (2*(line-1)))) >> (2*(line-1))).try_into().unwrap()
 }
 
 // fn set_value(board: &mut Board, col: usize, line: u8, val: u16) {
@@ -43,7 +43,7 @@ pub fn show_board(board: &Board) {
     for i in 1..7 {
         let mut line = String::from("│");
         for j in 1..8 {
-            match read_value (&board, j, 7-i) {
+            match read_value (board, j, 7-i) {
                 1 => line.push('●'),
                 2 => line.push('○'),
                 _ => line.push(' ')
@@ -98,7 +98,7 @@ pub fn add(board: &mut Board, player: u16, col: usize) -> u8 {
         return 2;
     }
     *column += player;
-    return 1;
+    1
 }
 
 pub fn column_full(board: &Board, col: usize) -> bool {
@@ -126,36 +126,34 @@ pub fn just_won(board: &Board, player: u8, col: usize) -> bool {
     }
 
     // if the token does not belong to this player, return false
-    if read_value(&board, col, line) != player {
+    if read_value(board, col, line) != player {
         return false;
     }
     
     // check the column
-    if line > 3 {
-        if (read_value(&board, col, line-1) == player)
-           && (read_value(&board, col, line-2) == player)
-           && (read_value(&board, col, line-3) == player) {
-
-            return true;   
-        }
+    if line > 3 
+       && (read_value(board, col, line-1) == player)
+       && (read_value(board, col, line-2) == player)
+       && (read_value(board, col, line-3) == player) {
+        return true;   
     }
 
     // check the line
     let mut n_aligned = 1;
-    if (col > 1) && (read_value(&board, col-1, line) == player) {
+    if (col > 1) && (read_value(board, col-1, line) == player) {
         n_aligned += 1;
-        if (col > 2) && (read_value(&board, col-2, line) == player) {
+        if (col > 2) && (read_value(board, col-2, line) == player) {
             n_aligned += 1;
-            if (col > 3) && (read_value(&board, col-3, line) == player) {
+            if (col > 3) && (read_value(board, col-3, line) == player) {
                 return true;
             }
         }
     }
-    if (col < 7) && (read_value(&board, col+1, line) == player) {
+    if (col < 7) && (read_value(board, col+1, line) == player) {
         n_aligned += 1;
-        if (col < 6) && (read_value(&board, col+2, line) == player) {
+        if (col < 6) && (read_value(board, col+2, line) == player) {
             n_aligned += 1;
-            if (col < 5) && (read_value(&board, col+3, line) == player) {
+            if (col < 5) && (read_value(board, col+3, line) == player) {
                 return true;
             }
         }
@@ -166,20 +164,20 @@ pub fn just_won(board: &Board, player: u8, col: usize) -> bool {
 
     // check the first diagonal
     let mut n_aligned = 1;
-    if (col > 1) && (line > 1) && (read_value(&board, col-1, line-1) == player) {
+    if (col > 1) && (line > 1) && (read_value(board, col-1, line-1) == player) {
         n_aligned += 1;
-        if (col > 2) && (line > 2) && (read_value(&board, col-2, line-2) == player) {
+        if (col > 2) && (line > 2) && (read_value(board, col-2, line-2) == player) {
             n_aligned += 1;
-            if (col > 3) && (line > 3) && (read_value(&board, col-3, line-3) == player) {
+            if (col > 3) && (line > 3) && (read_value(board, col-3, line-3) == player) {
                 return true;
             }
         }
     }
-    if (col < 7) && (line < 7) && (read_value(&board, col+1, line+1) == player) {
+    if (col < 7) && (line < 7) && (read_value(board, col+1, line+1) == player) {
         n_aligned += 1;
-        if (col < 6) && (line < 6) && (read_value(&board, col+2, line+2) == player) {
+        if (col < 6) && (line < 6) && (read_value(board, col+2, line+2) == player) {
             n_aligned += 1;
-            if (col < 5) && (line < 5) && (read_value(&board, col+3, line+3) == player) {
+            if (col < 5) && (line < 5) && (read_value(board, col+3, line+3) == player) {
                 return true;
             }
         }
@@ -190,20 +188,20 @@ pub fn just_won(board: &Board, player: u8, col: usize) -> bool {
     
     // check the second diagonal
     let mut n_aligned = 1;
-    if (col > 1) && (line < 7) && (read_value(&board, col-1, line+1) == player) {
+    if (col > 1) && (line < 7) && (read_value(board, col-1, line+1) == player) {
         n_aligned += 1;
-        if (col > 2) && (line < 6) && (read_value(&board, col-2, line+2) == player) {
+        if (col > 2) && (line < 6) && (read_value(board, col-2, line+2) == player) {
             n_aligned += 1;
-            if (col > 3) && (line < 5) && (read_value(&board, col-3, line+3) == player) {
+            if (col > 3) && (line < 5) && (read_value(board, col-3, line+3) == player) {
                 return true;
             }
         }
     }
-    if (col < 7) && (line > 1) && (read_value(&board, col+1, line-1) == player) {
+    if (col < 7) && (line > 1) && (read_value(board, col+1, line-1) == player) {
         n_aligned += 1;
-        if (col < 6) && (line > 2) && (read_value(&board, col+2, line-2) == player) {
+        if (col < 6) && (line > 2) && (read_value(board, col+2, line-2) == player) {
             n_aligned += 1;
-            if (col < 5) && (line > 3) && (read_value(&board, col+3, line-3) == player) {
+            if (col < 5) && (line > 3) && (read_value(board, col+3, line-3) == player) {
                 return true;
             }
         }
